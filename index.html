@@ -1,0 +1,273 @@
+<script type="text/javascript">
+        var gk_isXlsx = false;
+        var gk_xlsxFileLookup = {};
+        var gk_fileData = {};
+        function filledCell(cell) {
+          return cell !== '' && cell != null;
+        }
+        function loadFileData(filename) {
+        if (gk_isXlsx && gk_xlsxFileLookup[filename]) {
+            try {
+                var workbook = XLSX.read(gk_fileData[filename], { type: 'base64' });
+                var firstSheetName = workbook.SheetNames[0];
+                var worksheet = workbook.Sheets[firstSheetName];
+
+                // Convert sheet to JSON to filter blank rows
+                var jsonData = XLSX.utils.sheet_to_json(worksheet, { header: 1, blankrows: false, defval: '' });
+                // Filter out blank rows (rows where all cells are empty, null, or undefined)
+                var filteredData = jsonData.filter(row => row.some(filledCell));
+
+                // Heuristic to find the header row by ignoring rows with fewer filled cells than the next row
+                var headerRowIndex = filteredData.findIndex((row, index) =>
+                  row.filter(filledCell).length >= filteredData[index + 1]?.filter(filledCell).length
+                );
+                // Fallback
+                if (headerRowIndex === -1 || headerRowIndex > 25) {
+                  headerRowIndex = 0;
+                }
+
+                // Convert filtered JSON back to CSV
+                var csv = XLSX.utils.aoa_to_sheet(filteredData.slice(headerRowIndex)); // Create a new sheet from filtered array of arrays
+                csv = XLSX.utils.sheet_to_csv(csv, { header: 1 });
+                return csv;
+            } catch (e) {
+                console.error(e);
+                return "";
+            }
+        }
+        return gk_fileData[filename] || "";
+        }
+        </script><!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Basheer Ahamed Mohamed - Professional Portfolio</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <!-- Header Section -->
+    <header class="bg-gradient-to-r from-blue-600 to-blue-800 text-white">
+        <div class="section-container">
+            <div class="flex items-center py-8">
+                <img src="profile.jpg" alt="Basheer Ahamed Mohamed" class="profile-img mr-6">
+                <div>
+                    <h1 class="text-4xl font-bold">Basheer Ahamed Mohamed</h1>
+                    <p class="text-xl mt-2">Senior Project Manager | AI & IIoT Specialist</p>
+                    <p class="mt-1">Chennai, India</p>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- About Section -->
+    <section class="section-container">
+        <h2 class="text-3xl font-semibold text-gray-800 mb-6">About Me</h2>
+        <p class="text-gray-600 leading-relaxed">
+            Dynamic technology leader with over 18 years of experience in project management, software development, and digital transformation across manufacturing analytics, Industrial IoT (IIoT), and AI. Founded Digital Alchemy Labs (Jan 2007 - Feb 2017), leading a team of three to deliver tailored solutions for local vendors, supermarkets, educational institutions, and hospitals (details available upon request). Expert in architecting scalable systems, driving Agile methodologies, and fostering global collaboration. Holds certifications including Microsoft Certified Professional (MCP) and NVIDIA certification (ID: w4VlgwUB3IK8YYM1I2EYw, May 12, 2025).
+        </p>
+    </section>
+
+    <!-- Skills Section -->
+    <section class="section-container bg-gray-100 py-12">
+        <h2 class="text-3xl font-semibold text-gray-800 mb-6">My Skills</h2>
+        <div class="skills-grid">
+            <div class="skill-card">
+                <h3 class="text-lg font-semibold text-gray-800">Artificial Intelligence</h3>
+                <p class="text-gray-600 mt-2">Microsoft Certified Professional (MCP) with expertise in Azure chatbot development, semantic search, and AI-driven analytics for intelligent applications.</p>
+            </div>
+            <div class="skill-card">
+                <h3 class="text-lg font-semibold text-gray-800">Industrial IoT (IIoT)</h3>
+                <p class="text-gray-600 mt-2">Skilled in MTConnect, OPC UA, and OpenDAQ, implementing IIoT solutions for real-time data acquisition and industrial automation.</p>
+            </div>
+            <div class="skill-card">
+                <h3 class="text-lg font-semibold text-gray-800">Networking</h3>
+                <p class="text-gray-600 mt-2">Proficient in designing TCP-based connectivity, telecom protocols, and robust network infrastructures for enterprise systems.</p>
+            </div>
+            <div class="skill-card">
+                <h3 class="text-lg font-semibold text-gray-800">Project Management</h3>
+                <p class="text-gray-600 mt-2">Experienced in leading global teams using Agile/Scrum, architecting scalable systems, and aligning IT with business goals.</p>
+            </div>
+            <div class="skill-card">
+                <h3 class="text-lg font-semibold text-gray-800">Software Development</h3>
+                <p class="text-gray-600 mt-2">Expert in C++, C#, .NET Core, ReactJS, GraphQL, Python, and Azure DevOps for cross-platform development.</p>
+            </div>
+            <div class="skill-card">
+                <h3 class="text-lg font-semibold text-gray-800">UI/UX Architecture</h3>
+                <p class="text-gray-600 mt-2">Designed intuitive interfaces integrating software with hardware, aligned with global industry standards.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Experience Section -->
+    <section class="section-container">
+        <h2 class="text-3xl font-semibold text-gray-800 mb-6">Professional Experience</h2>
+        <div class="experience-card">
+            <h3 class="text-xl font-semibold text-gray-800">Principal Engineer, Vimana</h3>
+            <p class="text-gray-500 italic">Chennai, India, Jun 2015 - Aug 2021</p>
+            <p class="text-gray-600 mt-2">
+                Led manufacturing analytics projects, ensuring compliance and productivity. Designed Edge applications for real-time data analysis and drove Agile adoption across global teams.
+            </p>
+        </div>
+        <div class="experience-card">
+            <h3 class="text-xl font-semibold text-gray-800">Technical Lead, Virexid (Digital)</h3>
+            <p class="text-gray-500 italic">Chennai, India, Sep 2012 - Mar 2015</p>
+            <p class="text-gray-600 mt-2">
+                Spearheaded digital transformation initiatives, delivering scalable technical solutions and mentoring cross-functional teams.
+            </p>
+        </div>
+        <div class="experience-card">
+            <h3 class="text-xl font-semibold text-gray-800">Founder, Digital Alchemy Labs</h3>
+            <p class="text-gray-500 italic">Jan 2007 - Feb 2017</p>
+            <p class="text-gray-600 mt-2">
+                Founded and led a team of three to deliver bespoke software solutions for local vendors, supermarkets, educational institutions, and hospitals. Details available upon request.
+            </p>
+        </div>
+        <div class="experience-card">
+            <h3 class="text-xl font-semibold text-gray-800">Development Lead, West Technologies (India) Pvt Ltd</h3>
+            <p class="text-gray-500 italic">Hyderabad, India, Aug 2007 - May 2011</p>
+            <p class="text-gray-600 mt-2">
+                Led development of enterprise applications, focusing on performance optimization and team coordination.
+            </p>
+        </div>
+        <div class="experience-card">
+            <h3 class="text-xl font-semibold text-gray-800">Development Officer, UNION NATIONAL BANK</h3>
+            <p class="text-gray-500 italic">Abu Dhabi, UAE, Jun 2002 - Oct 2006</p>
+            <p class="text-gray-600 mt-2">
+                Developed banking applications, including GUI and database solutions, enhancing operational efficiency.
+            </p>
+        </div>
+    </section>
+
+    <!-- Projects Section -->
+    <section class="section-container bg-gray-100 py-12">
+        <h2 class="text-3xl font-semibold text-gray-800 mb-6">Key Projects</h2>
+        <div class="experience-card">
+            <h3 class="text-xl font-semibold text-gray-800">Advantage Easy</h3>
+            <p class="text-gray-500 italic">Team Lead, Scrum Master, Architect, 24 yrs</p>
+            <p class="text-gray-600 mt-2">
+                Architected a data acquisition system using .NET Core, C#, GraphQL, ReactJS, and Azure DevOps. Led Agile practices, ensuring scalability and stakeholder alignment.
+            </p>
+        </div>
+        <div class="experience-card">
+            <h3 class="text-xl font-semibold text-gray-800">OpenDAQ</h3>
+            <p class="text-gray-500 italic">Team Lead, Architect, 6 months</p>
+            <p class="text-gray-600 mt-2">
+                Developed an IIoT data acquisition platform using C++, OPC UA, and JSON-RPC, defining product roadmaps and facilitating Agile processes.
+            </p>
+        </div>
+        <div class="experience-card">
+            <h3 class="text-xl font-semibold text-gray-800">OneHBK</h3>
+            <p class="text-gray-500 italic">Project Manager</p>
+            <p class="text-gray-600 mt-2">
+                Managed development using Python, GraphQL, and ReactJS, aligning product vision with business goals and mentoring teams.
+            </p>
+        </div>
+        <div class="experience-card">
+            <h3 class="text-xl font-semibold text-gray-800">Site Manager and Tools</h3>
+            <p class="text-gray-500 italic">Architect, Team Lead, Senior Developer</p>
+            <p class="text-gray-600 mt-2">
+                Designed workflows using C++, C#, ReactJS, and MQTT, ensuring robust performance and Agile delivery.
+            </p>
+        </div>
+        <div class="experience-card">
+            <h3 class="text-xl font-semibold text-gray-800">Edge OTA</h3>
+            <p class="text-gray-500 italic">Architect, Developer</p>
+            <p class="text-gray-600 mt-2">
+                Architected an OTA system using C++, C#, MongoDB, and AWS Lambda, ensuring efficient update distribution and high development standards.
+            </p>
+        </div>
+        <div class="experience-card">
+            <h3 class="text-xl font-semibold text-gray-800">CNC Mappers</h3>
+            <p class="text-gray-500 italic">Dec 2019 - Jun 2020</p>
+            <p class="text-gray-600 mt-2">
+                Developed MTConnect adapters using C++, C#, and ReactJS, ensuring reliable TCP connectivity and XML data exchange.
+            </p>
+        </div>
+        <div class="experience-card">
+            <h3 class="text-xl font-semibold text-gray-800">CONDOR</h3>
+            <p class="text-gray-500 italic">Developer</p>
+            <p class="text-gray-600 mt-2">
+                Built a real-time monitoring system using C++/QML, Embedded Linux, and PostgreSQL, integrating Windows-Linux communication.
+            </p>
+        </div>
+        <div class="experience-card">
+            <h3 class="text-xl font-semibold text-gray-800">TVAdmin (TeleVantage Administrator)</h3>
+            <p class="text-gray-500 italic">Developer</p>
+            <p class="text-gray-600 mt-2">
+                Enhanced telecom systems using C++, C#, and MS SQL Server, developing automation scripts with Selenium and AutoIT.
+            </p>
+        </div>
+        <div class="experience-card">
+            <h3 class="text-xl font-semibold text-gray-800">Global Manager Web Service & Vcrypt</h3>
+            <p class="text-gray-500 italic">Developer</p>
+            <p class="text-gray-600 mt-2">
+                Implemented TCP connectivity and encryption using C++, C#, and .NET 3.5, optimizing COM/DCOM interactions.
+            </p>
+        </div>
+        <div class="experience-card">
+            <h3 class="text-xl font-semibold text-gray-800">Banking Vision</h3>
+            <p class="text-gray-500 italic">Developer</p>
+            <p class="text-gray-600 mt-2">
+                Developed a core banking application using Borland C++, Oracle, and Visual Basic, with GUI localization for Arabic/Latin scripts.
+            </p>
+        </div>
+        <div class="experience-card">
+            <h3 class="text-xl font-semibold text-gray-800">File Transfer Protocol over PSTN</h3>
+            <p class="text-gray-500 italic">Developer</p>
+            <p class="text-gray-600 mt-2">
+                Designed protocols for PSTN/GSM communication using C++ and ActiveX, creating user-friendly interfaces.
+            </p>
+        </div>
+        <div class="experience-card">
+            <h3 class="text-xl font-semibold text-gray-800">Works Monitoring System</h3>
+            <p class="text-gray-500 italic">Jan 2002 - Sep 2003</p>
+            <p class="text-gray-600 mt-2">
+                Built a task allocation system using VC++, MFC, and Oracle, with automated testing scripts for reliability.
+            </p>
+        </div>
+        <div class="experience-card">
+            <h3 class="text-xl font-semibold text-gray-800">Time and Attendance System</h3>
+            <p class="text-gray-500 italic">Jan 2002 - Sep 2003</p>
+            <p class="text-gray-600 mt-2">
+                Developed a proximity and HID card-based system using VC++, C#, and Oracle, integrating GPS readers for attendance tracking.
+            </p>
+        </div>
+    </section>
+
+    <!-- Certifications Section -->
+    <section class="section-container">
+        <h2 class="text-3xl font-semibold text-gray-800 mb-6">Certifications</h2>
+        <div class="experience-card">
+            <h3 class="text-xl font-semibold text-gray-800">Microsoft Certified Professional (MCP)</h3>
+            <p class="text-gray-600 mt-2">Specialized in AI and Azure-based solutions, including chatbot development.</p>
+        </div>
+        <div class="experience-card">
+            <h3 class="text-xl font-semibold text-gray-800">NVIDIA Certification</h3>
+            <p class="text-gray-500 italic">ID: w4VlgwUB3IK8YYM1I2EYw, Issued May 12, 2025</p>
+            <p class="text-gray-600 mt-2">Demonstrated expertise in AI and related technologies.</p>
+            <p class="text-gray-600 mt-1">
+                <a href="https://learn.nvidia.com/certificates5IdX5x5D5H1S16G4mdM9R8" class="text-blue-600 hover:underline">Verify Certificate</a>
+            </p>
+        </div>
+    </section>
+
+    <!-- Contact Section -->
+    <section class="section-container">
+        <h2 class="text-3xl font-semibold text-gray-800 mb-6">Get in Touch</h2>
+        <p class="text-gray-600">Email: <a href="mailto:basheer2579@gmail.com" class="text-blue-600 hover:underline">basheer2579@gmail.com</a> / <a href="mailto:basheer.md@outlook.com" class="text-blue-600 hover:underline">basheer.md@outlook.com</a></p>
+        <p class="text-gray-600 mt-2">Phone: <a href="tel:+919087824422" class="text-blue-600 hover:underline">+91 9087824422</a> / <a href="tel:+9196250884422" class="text-blue-600 hover:underline">+91 96250884422</a></p>
+        <p class="text-gray-600 mt-2">LinkedIn: <a href="https://linkedin.com/in/yourprofile" class="text-blue-600 hover:underline">linkedin.com/in/yourprofile</a></p>
+        <p class="text-gray-600 mt-2">GitHub: <a href="https://github.com/yourusername" class="text-blue-600 hover:underline">github.com/yourusername</a></p>
+    </section>
+
+    <!-- Footer -->
+    <footer class="bg-gray-800 text-white py-6">
+        <div class="section-container text-center">
+            <p>&copy; 2025 Basheer Ahamed Mohamed. All rights reserved.</p>
+        </div>
+    </footer>
+</body>
+</html>
